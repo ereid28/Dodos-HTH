@@ -1,5 +1,4 @@
-// WidgetLayout.tsx (with MUI integration for widgets)
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Game from './Game';
 import './WidgetLayout.css';
 import questions from './questions';
@@ -17,9 +16,52 @@ const WidgetLayout: React.FC = () => {
     const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
     const [questionActive, setQuestionActive] = useState(false);
-    const [showFeedback, setShowFeedback] = useState(false);
+    const [_showFeedback, setShowFeedback] = useState(false); // eslint-safe
     const [countdown, setCountdown] = useState<number>(10);
     const [phase, setPhase] = useState<'idle' | 'question' | 'feedback' | 'wait'>('idle');
+
+    const startQuestion = useCallback(() => {
+        const question = questions[currentIndex];
+        setCurrentQuestion(question);
+        setSelectedAnswer(null);
+        setIsCorrect(null);
+        setShowFeedback(false);
+        setQuestionActive(true);
+        setPhase('question');
+        setCountdown(20);
+    }, [currentIndex]);
+
+    const handleAnswerClick = useCallback((option: string) => {
+        if (!questionActive || selectedAnswer !== null) return;
+
+        setSelectedAnswer(option);
+        setIsCorrect(option === currentQuestion?.answer);
+        setShowFeedback(true);
+        setQuestionActive(false);
+        setPhase('feedback');
+        setCountdown(2);
+    }, [questionActive, selectedAnswer, currentQuestion]);
+
+    const handleTimeout = useCallback(() => {
+        setSelectedAnswer(null);
+        setIsCorrect(false);
+        setShowFeedback(true);
+        setQuestionActive(false);
+        setPhase('feedback');
+        setCountdown(2);
+    }, []);
+
+    const moveToNextQuestion = useCallback(() => {
+        const nextIndex = (currentIndex + 1) % questions.length;
+        setCurrentIndex(nextIndex);
+        setPhase('question');
+        setCountdown(20);
+        setCurrentQuestion(questions[nextIndex]);
+        setSelectedAnswer(null);
+        setIsCorrect(null);
+        setShowFeedback(false);
+        setQuestionActive(true);
+    }, [currentIndex]);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -44,50 +86,7 @@ const WidgetLayout: React.FC = () => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [phase]);
-
-    const startQuestion = () => {
-        const question = questions[currentIndex];
-        setCurrentQuestion(question);
-        setSelectedAnswer(null);
-        setIsCorrect(null);
-        setShowFeedback(false);
-        setQuestionActive(true);
-        setPhase('question');
-        setCountdown(20);
-    };
-
-    const handleAnswerClick = (option: string) => {
-        if (!questionActive || selectedAnswer !== null) return;
-
-        setSelectedAnswer(option);
-        setIsCorrect(option === currentQuestion?.answer);
-        setShowFeedback(true);
-        setQuestionActive(false);
-        setPhase('feedback');
-        setCountdown(2);
-    };
-
-    const handleTimeout = () => {
-        setSelectedAnswer(null);
-        setIsCorrect(false);
-        setShowFeedback(true);
-        setQuestionActive(false);
-        setPhase('feedback');
-        setCountdown(2);
-    };
-
-    const moveToNextQuestion = () => {
-        const nextIndex = (currentIndex + 1) % questions.length;
-        setCurrentIndex(nextIndex);
-        setPhase('question');
-        setCountdown(20);
-        setCurrentQuestion(questions[nextIndex]);
-        setSelectedAnswer(null);
-        setIsCorrect(null);
-        setShowFeedback(false);
-        setQuestionActive(true);
-    };
+    }, [phase, startQuestion, handleTimeout, moveToNextQuestion]);
 
     useEffect(() => {
         const handleKeyPress = (event: KeyboardEvent) => {
@@ -102,7 +101,7 @@ const WidgetLayout: React.FC = () => {
         };
         window.addEventListener('keydown', handleKeyPress);
         return () => window.removeEventListener('keydown', handleKeyPress);
-    }, [currentQuestion, questionActive, selectedAnswer]);
+    }, [currentQuestion, questionActive, selectedAnswer, handleAnswerClick]);
 
     const renderQuestionWidget = () => (
         <Paper
@@ -113,7 +112,7 @@ const WidgetLayout: React.FC = () => {
                 minHeight: '200px',
                 borderRadius: '12px',
                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-                backgroundColor: 'rgba(240, 240, 240, 0.9)', // Light gray tint
+                backgroundColor: 'rgba(240, 240, 240, 0.9)',
             }}
         >
             {phase === 'idle' || phase === 'wait' ? (
@@ -164,11 +163,9 @@ const WidgetLayout: React.FC = () => {
                         {isCorrect ? 'Correct!' : 'Wrong!'}
                     </Typography>
                 </Box>
-
             )}
         </Paper>
     );
-
 
     const renderPlaceholderBox = (text: string) => (
         <Paper
@@ -182,7 +179,7 @@ const WidgetLayout: React.FC = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: 'rgba(240, 240, 240, 0.9)', // Light gray tint
+                backgroundColor: 'rgba(240, 240, 240, 0.9)',
             }}
         >
             <Typography>{text}</Typography>
@@ -190,12 +187,40 @@ const WidgetLayout: React.FC = () => {
     );
 
     const renderLeaderboard = () => (
-        <Paper elevation={4} sx={{ p: 2, width: '500px', height: '420px', background: 'linear-gradient(135deg, #a0c4ff, #cce1ff)', borderRadius: '12px' }}>
-            <Typography variant="h6" color="#1565c0" fontWeight="bold" textAlign="center">Leaderboard Coming Soon</Typography>
-            <Typography variant="body2" color="#1e3a8a" textAlign="center" mb={2}>
+        <Paper
+            elevation={4}
+            sx={{
+                p: 2,
+                width: '500px',
+                height: '420px',
+                background: 'linear-gradient(135deg, #a0c4ff, #cce1ff)',
+                borderRadius: '12px',
+            }}
+        >
+            <Typography
+                variant="h6"
+                color="#1565c0"
+                fontWeight="bold"
+                textAlign="center"
+            >
+                Leaderboard Coming Soon
+            </Typography>
+            <Typography
+                variant="body2"
+                color="#1e3a8a"
+                textAlign="center"
+                mb={2}
+            >
                 Your name, EcoScore, and real score will appear here!
             </Typography>
-            <Box sx={{ backgroundColor: '#ffffffcc', borderRadius: 2, p: 2, fontFamily: 'monospace' }}>
+            <Box
+                sx={{
+                    backgroundColor: '#ffffffcc',
+                    borderRadius: 2,
+                    p: 2,
+                    fontFamily: 'monospace',
+                }}
+            >
                 <Typography>1. PlayerName - EcoScore: ??? - Score: ???</Typography>
                 <Typography>2. PlayerName - EcoScore: ??? - Score: ???</Typography>
                 <Typography>3. PlayerName - EcoScore: ??? - Score: ???</Typography>
