@@ -16,7 +16,7 @@ const WidgetLayout: React.FC = () => {
     const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
     const [questionActive, setQuestionActive] = useState(false);
-    const [_showFeedback, setShowFeedback] = useState(false); // eslint-safe
+    const setShowFeedback = useState(false)[1];
     const [countdown, setCountdown] = useState<number>(10);
     const [phase, setPhase] = useState<'idle' | 'question' | 'feedback' | 'wait'>('idle');
 
