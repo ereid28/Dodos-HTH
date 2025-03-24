@@ -1,0 +1,12 @@
+.app {
+  text-align: center;
+  align-items: center;
+}
+
+html, body, .flex-layout-container {
+  height: 100%; /* Ensure the layout container stretches fully */
+}
+
+.flex-layout-tabnode {
+  height: 100%; /* Ensure the tab node also takes up 100% of the height */
+}
