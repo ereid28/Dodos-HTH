@@ -1,13 +1,22 @@
 // WidgetLayout.tsx (with MUI integration for widgets)
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from './redux/store';
+import { incrementEcoScore } from './redux/ecoScoreSlice';
 import Game from './Game';
 import './WidgetLayout.css';
 import QuestionWidget from './QuestionWidget';
 import LeaderboardWidget from './LeaderboardWidget';
 import EcoScoreWidget from './EcoScoreWidget';
-import { Box, Paper, Typography, List, ListItem } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 
 const WidgetLayout: React.FC = () => {
+    const ecoScore = useSelector((state: RootState) => state.ecoScore.ecoScore);
+    const dispatch = useDispatch();
+
+    const handleIncrement = () => {
+        dispatch(incrementEcoScore());
+    }
 
     const renderPlaceholderBox = (text: string) => (
         <Paper
@@ -31,7 +40,7 @@ const WidgetLayout: React.FC = () => {
     return (
         <Box className="layout-container">
             <Box className="widget-column">
-                {<EcoScoreWidget ecoScore={95}/>}
+                {<EcoScoreWidget ecoScore={ecoScore}/>}
                 {<QuestionWidget/>}
                 {renderPlaceholderBox("Left Widget 3")}
             </Box>
