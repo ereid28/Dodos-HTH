@@ -108,7 +108,7 @@
   }
   
   .feedback-correct {
-    color: green;
+    color: rgb(0, 36, 128);
   }
   
   .feedback-wrong {
