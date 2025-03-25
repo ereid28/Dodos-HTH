@@ -16,9 +16,10 @@ const ecoScoreSlice = createSlice({
             state.ecoScore = action.payload;
         },
         incrementEcoScore(state) {
-            if (state.ecoScore < 100) {
-                state.ecoScore += 1;
-            }
+            // if (state.ecoScore < 100) {
+            //     state.ecoScore += 1;
+            // }
+            state.ecoScore += 1;
         }
     },
 });

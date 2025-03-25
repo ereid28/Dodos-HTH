@@ -38,7 +38,7 @@ interface EcoScoreWidgetProps {
                 <div
                   className="eco-score-fill"
                   style={{ 
-                    width: `${ecoScore}%`, // Set the width based on the score
+                    width: ecoScore > 100 ? `100%` : `${ecoScore}%`, // Set the width based on the score
                     backgroundColor: getEcoScoreColor(ecoScore), // Dynamic color
                   }}
                 ></div>
