@@ -5,7 +5,7 @@ interface EcoScoreState {
 }
 
 const initialState: EcoScoreState = {
-    ecoScore: 50,
+    ecoScore: 100,
 };
 
 const ecoScoreSlice = createSlice({

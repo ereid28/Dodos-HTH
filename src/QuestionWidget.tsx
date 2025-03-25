@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './WidgetLayout.css';
 import questions from './questions';
 import { Box, Paper, Typography, List, ListItem } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { incrementEcoScore } from './redux/ecoScoreSlice';
 
 interface Question {
     question: string;
@@ -18,6 +20,7 @@ const QuestionWidget = () => {
     const [showFeedback, setShowFeedback] = useState(false);
     const [countdown, setCountdown] = useState<number>(10);
     const [phase, setPhase] = useState<'idle' | 'question' | 'feedback' | 'wait'>('idle');
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -55,11 +58,18 @@ const QuestionWidget = () => {
         setCountdown(20);
     };
 
+    const handleUpScore = () => {
+        dispatch(incrementEcoScore());
+    }
+
     const handleAnswerClick = (option: string) => {
         if (!questionActive || selectedAnswer !== null) return;
 
         setSelectedAnswer(option);
         setIsCorrect(option === currentQuestion?.answer);
+        if (option === currentQuestion?.answer) {
+            handleUpScore();
+        }
         setShowFeedback(true);
         setQuestionActive(false);
         setPhase('feedback');

@@ -46,7 +46,7 @@ const WidgetLayout: React.FC = () => {
             </Box>
 
             <Box className="game-section">
-                <Box className="game-header">Game Header</Box>
+                <Box className="game-header">DODO'S HIGH TIDE HUSTLE</Box>
                 <Box className="game-container">
                     <Game />
                 </Box>
