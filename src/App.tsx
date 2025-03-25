@@ -2,7 +2,7 @@
 import React from 'react';
 import './App.css';
 import WidgetLayout from './WidgetLayout';
-import backgroundImage from './tester-bg-pic.jpg'; // import the image
+import backgroundImage from './placeholder_background.jpg'; // import the image
 
 function App() {
   return (
