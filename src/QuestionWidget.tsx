@@ -3,7 +3,7 @@ import './WidgetLayout.css';
 import questions from './questions';
 import { Box, Paper, Typography, List, ListItem } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { incrementEcoScore } from './redux/ecoScoreSlice';
+import { incrementEcoScore, decrementEcoScore } from './redux/ecoScoreSlice';
 
 interface Question {
     question: string;
@@ -18,7 +18,7 @@ const QuestionWidget = () => {
     const [feedback, setFeedback] = useState<string | null>(null); // 'Correct!' or 'Wrong!'
     const [countdown, setCountdown] = useState<number>(20); // Timer for question display (20 seconds)
     const [nextQuestionCountdown, setNextQuestionCountdown] = useState<number>(10); // Countdown for next question
-    const [showNextQuestionScreen, setShowNextQuestionScreen] = useState<boolean>(false); // Show next question countdown
+    const [showNextQuestionScreen, setShowNextQuestionScreen] = useState<boolean>(false); // Show next question countdown screen
     const dispatch = useDispatch();
 
     // Timer logic for countdown
@@ -61,16 +61,25 @@ const QuestionWidget = () => {
             setIsCorrect(null);
             setCountdown(20); // Reset countdown for next question
             setShowNextQuestionScreen(true); // Show the "Next Question in X seconds..." screen
-        }, 1000); // Wait 2 seconds after feedback before moving to the next question
+        }, 1000); // Wait 1 second after feedback before moving to the next question
     };
 
-    // Handle correct answer selection
+    // Handle correct answer selection (increment EcoScore)
     const handleUpScore = () => {
         dispatch(incrementEcoScore());
         dispatch(incrementEcoScore());
         dispatch(incrementEcoScore());
         dispatch(incrementEcoScore());
         dispatch(incrementEcoScore());
+    };
+
+    // Handle wrong answer selection (decrement EcoScore)
+    const handleDownScore = () => {
+        dispatch(decrementEcoScore());
+        dispatch(decrementEcoScore());
+        dispatch(decrementEcoScore());
+        dispatch(decrementEcoScore());
+        dispatch(decrementEcoScore());
     };
 
     // Handle answer click, check correctness, and display feedback
@@ -83,12 +92,15 @@ const QuestionWidget = () => {
         setFeedback(correct ? 'Correct!' : 'Wrong!');
 
         if (correct) handleUpScore(); // Increase eco score on correct answer
+        else handleDownScore(); // Decrease eco score on wrong answer
+
         startNextQuestion(); // Move to next question after feedback
     };
 
     // Handle timeout if no answer is selected within the time limit
     const handleTimeout = () => {
         setFeedback('Wrong!');
+        handleDownScore(); // Decrease eco score if time runs out without answering
         startNextQuestion(); // Move to the next question after timeout
     };
 
