@@ -1,8 +1,8 @@
-// WidgetLayout.tsx
-import React from 'react';
+// WidgetLayout.tsx (with MUI integration for widgets)
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from './redux/store';
-import { incrementEcoScore } from './redux/ecoScoreSlice';
+import { incrementEcoScore, decrementEcoScore} from './redux/ecoScoreSlice';
 import Game from './Game';
 import './WidgetLayout.css';
 import QuestionWidget from './QuestionWidget';
@@ -14,27 +14,34 @@ const WidgetLayout: React.FC = () => {
     const ecoScore = useSelector((state: RootState) => state.ecoScore.ecoScore);
     const dispatch = useDispatch();
 
+    // Handle the decrement of ecoScore every 2 seconds
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (ecoScore > 0) {
+                dispatch(decrementEcoScore());
+            }
+        }, 2000); // Decrement every 2 seconds
+
+        return () => clearInterval(interval); // Clear interval when component unmounts
+    }, [ecoScore, dispatch]); // Re-run effect when ecoScore changes
+
     const handleIncrement = () => {
         dispatch(incrementEcoScore());
-    };
+    }
 
     const renderPlaceholderBox = (text: string) => (
         <Paper
             elevation={4}
             sx={{
                 p: 2,
-                width: '100%',
-                maxWidth: '100%',
-                minHeight: '20%',
+                width: '500px',
+                minHeight: '200px',
                 borderRadius: '12px',
                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: 'rgba(240, 240, 240, 0.9)',
-                boxSizing: 'border-box',
-                margin: '0.5rem 0',
-                flexShrink: 0,
+                backgroundColor: 'rgba(240, 240, 240, 0.9)', // Light gray tint
             }}
         >
             <Typography>{text}</Typography>
@@ -43,20 +50,12 @@ const WidgetLayout: React.FC = () => {
 
     return (
         <Box className="layout-container">
-            {/* Left Widget Column */}
             <Box className="widget-column">
-                <Box className="widget-box">
-                    <EcoScoreWidget ecoScore={ecoScore} />
-                </Box>
-                <Box className="widget-box">
-                    <QuestionWidget />
-                </Box>
-                <Box className="widget-box">
-                    {renderPlaceholderBox("Left Widget 3")}
-                </Box>
+                {<EcoScoreWidget ecoScore={ecoScore}/>}
+                {<QuestionWidget/>}
+                {renderPlaceholderBox("Left Widget 3")}
             </Box>
 
-            {/* Game Section */}
             <Box className="game-section">
                 <Box className="game-header">DODO'S HIGH TIDE HUSTLE</Box>
                 <Box className="game-container">
@@ -65,14 +64,9 @@ const WidgetLayout: React.FC = () => {
                 <Box className="game-footer">Game Footer</Box>
             </Box>
 
-            {/* Right Widget Column */}
             <Box className="widget-column">
-                <Box className="widget-box">
-                    <LeaderboardWidget />
-                </Box>
-                <Box className="widget-box">
-                    {renderPlaceholderBox("Right Widget 3")}
-                </Box>
+                {<LeaderboardWidget/>}
+                {renderPlaceholderBox("Right Widget 3")}
             </Box>
         </Box>
     );

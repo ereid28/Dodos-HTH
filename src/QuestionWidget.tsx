@@ -1,8 +1,7 @@
-// QuestionWidget.tsx
 import React, { useState, useEffect } from 'react';
 import './WidgetLayout.css';
 import questions from './questions';
-import { Box, Typography, List, ListItem } from '@mui/material';
+import { Box, Paper, Typography, List, ListItem } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { incrementEcoScore } from './redux/ecoScoreSlice';
 
@@ -14,168 +13,192 @@ interface Question {
 
 const QuestionWidget = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
     const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-    const [questionActive, setQuestionActive] = useState(false);
-    const [showFeedback, setShowFeedback] = useState(false);
-    const [countdown, setCountdown] = useState<number>(10);
-    const [phase, setPhase] = useState<'idle' | 'question' | 'feedback' | 'wait'>('idle');
+    const [feedback, setFeedback] = useState<string | null>(null); // 'Correct!' or 'Wrong!'
+    const [countdown, setCountdown] = useState<number>(20); // Timer for question display (20 seconds)
+    const [nextQuestionCountdown, setNextQuestionCountdown] = useState<number>(10); // Countdown for next question
+    const [showNextQuestionScreen, setShowNextQuestionScreen] = useState<boolean>(false); // Show next question countdown
     const dispatch = useDispatch();
 
+    // Timer logic for countdown
     useEffect(() => {
-        const timer = setInterval(() => {
-            setCountdown(prev => {
-                if (prev > 1) return prev - 1;
+        if (showNextQuestionScreen) {
+            // Countdown for the "Next Question in X seconds..."
+            const timer = setInterval(() => {
+                setNextQuestionCountdown(prev => {
+                    if (prev > 1) return prev - 1;
+                    else {
+                        clearInterval(timer);
+                        moveToNextQuestion(); // Move to the next question after countdown ends
+                        return 0;
+                    }
+                });
+            }, 1000);
+            return () => clearInterval(timer);
+        } else {
+            // Question countdown logic
+            const timer = setInterval(() => {
+                setCountdown(prev => {
+                    if (prev > 1) return prev - 1;
+                    else {
+                        if (!feedback) {
+                            handleTimeout(); // Show 'Wrong!' if time runs out
+                        }
+                        return 0;
+                    }
+                });
+            }, 1000);
+            return () => clearInterval(timer);
+        }
+    }, [countdown, feedback, showNextQuestionScreen]);
 
-                clearInterval(timer);
-
-                if (phase === 'idle') {
-                    startQuestion();
-                } else if (phase === 'question') {
-                    handleTimeout();
-                } else if (phase === 'feedback') {
-                    setPhase('wait');
-                    setCountdown(20);
-                } else if (phase === 'wait') {
-                    moveToNextQuestion();
-                }
-
-                return 0;
-            });
-        }, 1000);
-
-        return () => clearInterval(timer);
-    }, [phase]);
-
-    const startQuestion = () => {
-        const question = questions[currentIndex];
-        setCurrentQuestion(question);
-        setSelectedAnswer(null);
-        setIsCorrect(null);
-        setShowFeedback(false);
-        setQuestionActive(true);
-        setPhase('question');
-        setCountdown(20);
+    // Handle moving to the next question after a feedback message is shown
+    const startNextQuestion = () => {
+        setTimeout(() => {
+            setFeedback(null);
+            setSelectedAnswer(null);
+            setIsCorrect(null);
+            setCountdown(20); // Reset countdown for next question
+            setShowNextQuestionScreen(true); // Show the "Next Question in X seconds..." screen
+        }, 1000); // Wait 2 seconds after feedback before moving to the next question
     };
 
+    // Handle correct answer selection
     const handleUpScore = () => {
+        dispatch(incrementEcoScore());
+        dispatch(incrementEcoScore());
+        dispatch(incrementEcoScore());
+        dispatch(incrementEcoScore());
         dispatch(incrementEcoScore());
     };
 
+    // Handle answer click, check correctness, and display feedback
     const handleAnswerClick = (option: string) => {
-        if (!questionActive || selectedAnswer !== null) return;
+        if (selectedAnswer !== null) return; // Prevent changing the answer
 
         setSelectedAnswer(option);
-        setIsCorrect(option === currentQuestion?.answer);
-        if (option === currentQuestion?.answer) {
-            handleUpScore();
-        }
-        setShowFeedback(true);
-        setQuestionActive(false);
-        setPhase('feedback');
-        setCountdown(2);
+        const correct = option === questions[currentIndex].answer;
+        setIsCorrect(correct);
+        setFeedback(correct ? 'Correct!' : 'Wrong!');
+
+        if (correct) handleUpScore(); // Increase eco score on correct answer
+        startNextQuestion(); // Move to next question after feedback
     };
 
+    // Handle timeout if no answer is selected within the time limit
     const handleTimeout = () => {
-        setSelectedAnswer(null);
-        setIsCorrect(false);
-        setShowFeedback(true);
-        setQuestionActive(false);
-        setPhase('feedback');
-        setCountdown(2);
+        setFeedback('Wrong!');
+        startNextQuestion(); // Move to the next question after timeout
     };
 
+    // Move to the next question (after feedback and countdown)
     const moveToNextQuestion = () => {
-        const nextIndex = (currentIndex + 1) % questions.length;
-        setCurrentIndex(nextIndex);
-        setPhase('question');
-        setCountdown(20);
-        setCurrentQuestion(questions[nextIndex]);
-        setSelectedAnswer(null);
-        setIsCorrect(null);
-        setShowFeedback(false);
-        setQuestionActive(true);
+        setShowNextQuestionScreen(false); // Hide "Next Question in X seconds..." screen
+        setNextQuestionCountdown(10); // Reset next question countdown
+        setCurrentIndex((prevIndex) => {
+            const nextIndex = prevIndex + 1;
+            if (nextIndex >= questions.length) {
+                return 0; // Loop back to the first question after the last one
+            }
+            return nextIndex;
+        });
     };
 
+    // Get the current question
+    const currentQuestion = questions[currentIndex];
+
+    // Listen for key presses (1, 2, or 3) to select an answer
     useEffect(() => {
         const handleKeyPress = (event: KeyboardEvent) => {
-            if (!questionActive || !currentQuestion || selectedAnswer !== null) return;
-            const key = event.key;
-            if (key >= '1' && key <= '3') {
-                const index = parseInt(key) - 1;
-                if (currentQuestion.options[index]) {
-                    handleAnswerClick(currentQuestion.options[index]);
-                }
+            if (selectedAnswer !== null) return; // Prevent changing the answer after it's selected
+
+            if (event.key === '1' && currentQuestion.options[0]) {
+                handleAnswerClick(currentQuestion.options[0]);
+            } else if (event.key === '2' && currentQuestion.options[1]) {
+                handleAnswerClick(currentQuestion.options[1]);
+            } else if (event.key === '3' && currentQuestion.options[2]) {
+                handleAnswerClick(currentQuestion.options[2]);
             }
         };
+
         window.addEventListener('keydown', handleKeyPress);
         return () => window.removeEventListener('keydown', handleKeyPress);
-    }, [currentQuestion, questionActive, selectedAnswer]);
+    }, [selectedAnswer, currentQuestion]);
 
     return (
-        <Box
+        <Paper
+            elevation={4}
             sx={{
-                width: '100%',
-                height: '100%',
-                boxSizing: 'border-box',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'flex-start',
+                p: 2,
+                width: '500px',
+                minHeight: '200px',
+                borderRadius: '12px',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                backgroundColor: 'rgba(240, 240, 240, 0.9)', // Light gray tint
             }}
         >
-            {phase === 'idle' || phase === 'wait' ? (
-                <Typography>Next question in {countdown} seconds...</Typography>
-            ) : phase === 'question' ? (
-                <>
-                    <Typography>Marking question wrong in {countdown} seconds...</Typography>
-                    {currentQuestion && (
-                        <>
-                            <Typography variant="h6" fontWeight="bold" mt={1}>
-                                {currentQuestion.question}
-                            </Typography>
-                            <List>
-                                {currentQuestion.options.map((option, index) => (
-                                    <ListItem
-                                        key={index}
-                                        onClick={() => handleAnswerClick(option)}
-                                        sx={{
-                                            cursor: selectedAnswer === null ? 'pointer' : 'default',
-                                            color:
-                                                selectedAnswer === option
-                                                    ? isCorrect
-                                                        ? 'green'
-                                                        : 'red'
-                                                    : 'black',
-                                        }}
-                                    >
-                                        {option}
-                                    </ListItem>
-                                ))}
-                            </List>
-                        </>
-                    )}
-                </>
-            ) : (
+            {showNextQuestionScreen ? ( // Show next question countdown screen
                 <Box
                     sx={{
-                        height: '100%',
-                        width: '100%',
+                        height: '200px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                     }}
                 >
                     <Typography
-                        sx={{ fontSize: '1.5rem', fontWeight: 'bold', textAlign: 'center' }}
-                        color={isCorrect ? 'green' : 'red'}
+                        sx={{ fontSize: '24px', fontWeight: 'bold', textAlign: 'center' }}
                     >
-                        {isCorrect ? 'Correct!' : 'Wrong!'}
+                        Next question in {nextQuestionCountdown} seconds...
+                    </Typography>
+                </Box>
+            ) : feedback === null ? ( // Show question if no feedback yet
+                <Box>
+                    <Typography variant="h6" fontWeight="bold" mt={1}>
+                        {currentQuestion.question}
+                    </Typography>
+                    <List>
+                        {currentQuestion.options.map((option, index) => (
+                            <ListItem
+                                key={index}
+                                onClick={() => handleAnswerClick(option)}
+                                sx={{
+                                    cursor: selectedAnswer === null ? 'pointer' : 'default',
+                                    color:
+                                        selectedAnswer === option
+                                            ? isCorrect
+                                                ? 'green'
+                                                : 'red'
+                                            : 'black',
+                                }}
+                            >
+                                {option}
+                            </ListItem>
+                        ))}
+                    </List>
+                    <Typography variant="body2" textAlign="center">
+                        Time left: {countdown} seconds
+                    </Typography>
+                </Box>
+            ) : ( // Show feedback message when answer is selected
+                <Box
+                    sx={{
+                        height: '200px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Typography
+                        sx={{ fontSize: '24px', fontWeight: 'bold', textAlign: 'center' }}
+                        color={feedback === 'Correct!' ? 'green' : 'red'}
+                    >
+                        {feedback}
                     </Typography>
                 </Box>
             )}
-        </Box>
+        </Paper>
     );
 };
 
