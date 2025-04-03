@@ -1,6 +1,5 @@
-// App.tsx
 import React from 'react';
-import './App.css';
+import './App.css'; // Ensure you import the CSS for animations
 import WidgetLayout from './WidgetLayout';
 import backgroundImage from './placeholder_background.jpg'; // import the image
 

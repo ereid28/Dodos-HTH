@@ -5,7 +5,11 @@ import { Box, Paper, Typography, List, ListItem } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { incrementEcoScore, decrementEcoScore } from './redux/ecoScoreSlice';
 
-const QuestionWidget = () => {
+interface QuestionWidgetProps {
+    triggerJitter: () => void; // Accept triggerJitter as a prop
+}
+
+const QuestionWidget: React.FC<QuestionWidgetProps> = ({ triggerJitter }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
@@ -60,9 +64,12 @@ const QuestionWidget = () => {
         setIsCorrect(correct);
         setFeedback(correct ? 'Correct!' : 'Wrong!');
         if (correct) handleUpScore();
-        else handleDownScore();
+        else {
+            handleDownScore();
+            triggerJitter(); // Trigger jitter if answer is wrong
+        }
         startNextQuestion();
-    }, [selectedAnswer, currentIndex, handleUpScore, handleDownScore]);
+    }, [selectedAnswer, currentIndex, handleUpScore, handleDownScore, triggerJitter]);
 
     // Move to the next question (after feedback and countdown)
     const moveToNextQuestion = () => {
