@@ -15,7 +15,7 @@ const Game = () => {
 
     const handleUpScore = useCallback(() => {
         dispatch(incrementEcoScore());
-    }, []);
+    }, [dispatch]);  // Add dispatch as a dependency
 
     useEffect(() => {
         addEventListener("SendScore", handleUpScore);

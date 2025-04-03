@@ -1,5 +1,5 @@
 import './WidgetLayout.css';
-import { Box, Paper, Typography, List, ListItem } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 
 const LeaderboardWidget = () => {
     return (
