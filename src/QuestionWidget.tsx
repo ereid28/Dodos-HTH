@@ -1,15 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './WidgetLayout.css';
 import questions from './questions';
 import { Box, Paper, Typography, List, ListItem } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { incrementEcoScore, decrementEcoScore } from './redux/ecoScoreSlice';
-
-interface Question {
-    question: string;
-    options: string[];
-    answer: string;
-}
 
 const QuestionWidget = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -21,6 +15,72 @@ const QuestionWidget = () => {
     const [showNextQuestionScreen, setShowNextQuestionScreen] = useState<boolean>(false); // Show next question countdown screen
     const dispatch = useDispatch();
 
+    // Handle moving to the next question after a feedback message is shown
+    const startNextQuestion = () => {
+        setTimeout(() => {
+            setFeedback(null);
+            setSelectedAnswer(null);
+            setIsCorrect(null);
+            setCountdown(20); // Reset countdown for next question
+            setShowNextQuestionScreen(true); // Show the "Next Question in X seconds..." screen
+        }, 1000); // Wait 1 second after feedback before moving to the next question
+    };
+
+    // Handle correct answer selection (increment EcoScore)
+    const handleUpScore = useCallback(() => {
+        dispatch(incrementEcoScore());
+        dispatch(incrementEcoScore());
+        dispatch(incrementEcoScore());
+        dispatch(incrementEcoScore());
+        dispatch(incrementEcoScore());
+    }, [dispatch]);
+
+    // Handle wrong answer selection (decrement EcoScore)
+    const handleDownScore = useCallback(() => {
+        dispatch(decrementEcoScore());
+        dispatch(decrementEcoScore());
+        dispatch(decrementEcoScore());
+        dispatch(decrementEcoScore());
+        dispatch(decrementEcoScore());
+    }, [dispatch]);
+
+    // Handle timeout if no answer is selected within the time limit
+    const handleTimeout = useCallback(() => {
+        setFeedback('Wrong!');
+        handleDownScore(); 
+        startNextQuestion(); 
+    }, [handleDownScore]);
+
+    // Handle answer click, check correctness, and display feedback
+    const handleAnswerClick = useCallback((option: string) => {
+        if (selectedAnswer !== null) return;
+
+        setSelectedAnswer(option);
+        const correct = option === questions[currentIndex].answer;
+        setIsCorrect(correct);
+        setFeedback(correct ? 'Correct!' : 'Wrong!');
+        if (correct) handleUpScore();
+        else handleDownScore();
+        startNextQuestion();
+    }, [selectedAnswer, currentIndex, handleUpScore, handleDownScore]);
+
+    // Move to the next question (after feedback and countdown)
+    const moveToNextQuestion = () => {
+        setShowNextQuestionScreen(false); // Hide "Next Question in X seconds..." screen
+        setNextQuestionCountdown(10); // Reset next question countdown
+        setCurrentIndex((prevIndex) => {
+            const nextIndex = prevIndex + 1;
+            if (nextIndex >= questions.length) {
+                return 0; // Loop back to the first question after the last one
+            }
+            return nextIndex;
+        });
+    };
+
+    // Get the current question
+    const currentQuestion = questions[currentIndex];
+
+    
     // Timer logic for countdown
     useEffect(() => {
         if (showNextQuestionScreen) {
@@ -51,74 +111,7 @@ const QuestionWidget = () => {
             }, 1000);
             return () => clearInterval(timer);
         }
-    }, [countdown, feedback, showNextQuestionScreen]);
-
-    // Handle moving to the next question after a feedback message is shown
-    const startNextQuestion = () => {
-        setTimeout(() => {
-            setFeedback(null);
-            setSelectedAnswer(null);
-            setIsCorrect(null);
-            setCountdown(20); // Reset countdown for next question
-            setShowNextQuestionScreen(true); // Show the "Next Question in X seconds..." screen
-        }, 1000); // Wait 1 second after feedback before moving to the next question
-    };
-
-    // Handle correct answer selection (increment EcoScore)
-    const handleUpScore = () => {
-        dispatch(incrementEcoScore());
-        dispatch(incrementEcoScore());
-        dispatch(incrementEcoScore());
-        dispatch(incrementEcoScore());
-        dispatch(incrementEcoScore());
-    };
-
-    // Handle wrong answer selection (decrement EcoScore)
-    const handleDownScore = () => {
-        dispatch(decrementEcoScore());
-        dispatch(decrementEcoScore());
-        dispatch(decrementEcoScore());
-        dispatch(decrementEcoScore());
-        dispatch(decrementEcoScore());
-    };
-
-    // Handle answer click, check correctness, and display feedback
-    const handleAnswerClick = (option: string) => {
-        if (selectedAnswer !== null) return; // Prevent changing the answer
-
-        setSelectedAnswer(option);
-        const correct = option === questions[currentIndex].answer;
-        setIsCorrect(correct);
-        setFeedback(correct ? 'Correct!' : 'Wrong!');
-
-        if (correct) handleUpScore(); // Increase eco score on correct answer
-        else handleDownScore(); // Decrease eco score on wrong answer
-
-        startNextQuestion(); // Move to next question after feedback
-    };
-
-    // Handle timeout if no answer is selected within the time limit
-    const handleTimeout = () => {
-        setFeedback('Wrong!');
-        handleDownScore(); // Decrease eco score if time runs out without answering
-        startNextQuestion(); // Move to the next question after timeout
-    };
-
-    // Move to the next question (after feedback and countdown)
-    const moveToNextQuestion = () => {
-        setShowNextQuestionScreen(false); // Hide "Next Question in X seconds..." screen
-        setNextQuestionCountdown(10); // Reset next question countdown
-        setCurrentIndex((prevIndex) => {
-            const nextIndex = prevIndex + 1;
-            if (nextIndex >= questions.length) {
-                return 0; // Loop back to the first question after the last one
-            }
-            return nextIndex;
-        });
-    };
-
-    // Get the current question
-    const currentQuestion = questions[currentIndex];
+    }, [countdown, feedback, showNextQuestionScreen, handleTimeout]);
 
     // Listen for key presses (1, 2, or 3) to select an answer
     useEffect(() => {
@@ -136,7 +129,7 @@ const QuestionWidget = () => {
 
         window.addEventListener('keydown', handleKeyPress);
         return () => window.removeEventListener('keydown', handleKeyPress);
-    }, [selectedAnswer, currentQuestion]);
+    }, [selectedAnswer, currentQuestion, handleAnswerClick]);
 
     return (
         <Paper

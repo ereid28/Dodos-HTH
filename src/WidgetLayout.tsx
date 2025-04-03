@@ -1,8 +1,8 @@
 // WidgetLayout.tsx (with MUI integration for widgets)
-import React, { useState, useEffect } from 'react';
+import React, {useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from './redux/store';
-import { incrementEcoScore, decrementEcoScore} from './redux/ecoScoreSlice';
+import {decrementEcoScore} from './redux/ecoScoreSlice';
 import Game from './Game';
 import './WidgetLayout.css';
 import QuestionWidget from './QuestionWidget';
@@ -24,10 +24,6 @@ const WidgetLayout: React.FC = () => {
 
         return () => clearInterval(interval); // Clear interval when component unmounts
     }, [ecoScore, dispatch]); // Re-run effect when ecoScore changes
-
-    const handleIncrement = () => {
-        dispatch(incrementEcoScore());
-    }
 
     const renderPlaceholderBox = (text: string) => (
         <Paper
