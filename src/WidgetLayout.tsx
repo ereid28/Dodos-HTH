@@ -2,16 +2,18 @@
 import React, {useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from './redux/store';
-import {decrementEcoScore} from './redux/ecoScoreSlice';
+import {decrementEcoScore} from './redux/slice';
 import Game from './Game';
 import './WidgetLayout.css';
 import QuestionWidget from './QuestionWidget';
 import LeaderboardWidget from './LeaderboardWidget';
 import EcoScoreWidget from './EcoScoreWidget';
 import { Box, Paper, Typography } from '@mui/material';
+import UserNameWidget from './UserNameWidget';
 
 const WidgetLayout: React.FC = () => {
-    const ecoScore = useSelector((state: RootState) => state.ecoScore.ecoScore);
+    const ecoScore = useSelector((state: RootState) => state.layout.ecoScore);
+    const userName = useSelector((state: RootState) => state.layout.userName);
     const dispatch = useDispatch();
 
     // Handle the decrement of ecoScore every 2 seconds
@@ -57,7 +59,7 @@ const WidgetLayout: React.FC = () => {
                 <Box className="game-container">
                     <Game />
                 </Box>
-                <Box className="game-footer">Game Footer</Box>
+                <Box className="game-footer">{userName}</Box>
             </Box>
 
             <Box className="widget-column">

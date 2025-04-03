@@ -61,9 +61,21 @@
   min-width: 0; /* Helps prevent overflow */
 }
 
-.game-header,
+.game-header {
+  height: 25px;
+  width: 100%;
+  max-width: 700px;
+  background-color: #d1e7dd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
 .game-footer {
-  height: 50px;
+  height: 75px;
   width: 100%;
   max-width: 700px;
   background-color: #d1e7dd;

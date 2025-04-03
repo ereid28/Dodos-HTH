@@ -3,7 +3,7 @@ import './WidgetLayout.css';
 import questions from './questions';
 import { Box, Paper, Typography, List, ListItem } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { incrementEcoScore, decrementEcoScore } from './redux/ecoScoreSlice';
+import { incrementEcoScore, decrementEcoScore } from './redux/slice';
 
 const QuestionWidget = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -117,6 +117,11 @@ const QuestionWidget = () => {
     useEffect(() => {
         const handleKeyPress = (event: KeyboardEvent) => {
             if (selectedAnswer !== null) return; // Prevent changing the answer after it's selected
+
+             // Check if the event target is an input field or textarea
+        if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+            return; // Stop execution if typing inside an input field
+        }
 
             if (event.key === '1' && currentQuestion.options[0]) {
                 handleAnswerClick(currentQuestion.options[0]);
