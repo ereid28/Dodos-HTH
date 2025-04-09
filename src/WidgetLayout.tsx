@@ -2,7 +2,7 @@
 import React, {useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from './redux/store';
-import {decrementEcoScore} from './redux/slice';
+import { decrementEcoScore } from './redux/slice';
 import Game from './Game';
 import './WidgetLayout.css';
 import QuestionWidget from './QuestionWidget';
@@ -10,8 +10,11 @@ import LeaderboardWidget from './LeaderboardWidget';
 import EcoScoreWidget from './EcoScoreWidget';
 import { Box, Paper, Typography } from '@mui/material';
 import UserNameWidget from './UserNameWidget';
+import { motion } from 'framer-motion';
+const MotionBox = motion(Box);
 
 const WidgetLayout: React.FC = () => {
+    // redux state
     const ecoScore = useSelector((state: RootState) => state.layout.ecoScore);
     const userName = useSelector((state: RootState) => state.layout.userName);
     const dispatch = useDispatch();
@@ -56,10 +59,27 @@ const WidgetLayout: React.FC = () => {
 
             <Box className="game-section">
                 <Box className="game-header">DODO'S HIGH TIDE HUSTLE</Box>
-                <Box className="game-container">
-                    <Game />
-                </Box>
-                <Box className="game-footer">{userName}</Box>
+                    {userName && (
+                        <MotionBox
+                            className="game-container"
+                            initial={{ opacity: 0, y: '-100%' }}
+                            animate={{ opacity: 1, y : '0%' }}
+                            transition={{ duration: 0.4 }}
+                        >
+                            <Game/>
+                        </MotionBox>
+                    )}
+                    {!userName ? (
+                        <motion.div
+                            initial={{ y: '-100%' }}
+                            animate={{ y: userName.trim() ? '0%' : 0 }}
+                            transition={{ type: 'spring', stiffness: 100 }}
+                        >
+                            <UserNameWidget userName={userName}/>
+                        </motion.div> 
+                        ) : (
+                        <Box className="game-footer">{userName}</Box> 
+                    )}
             </Box>
 
             <Box className="widget-column">

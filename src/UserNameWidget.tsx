@@ -1,14 +1,9 @@
-import React, {useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from './redux/store';
-import {decrementEcoScore} from './redux/slice';
-import Game from './Game';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setUserName } from './redux/slice';
 import './WidgetLayout.css';
-import QuestionWidget from './QuestionWidget';
-import LeaderboardWidget from './LeaderboardWidget';
-import EcoScoreWidget from './EcoScoreWidget';
-import { Box, Paper, Typography, TextField, InputAdornment } from '@mui/material';
-import { inputBaseClasses } from '@mui/material/InputBase';
+import { Box, TextField, Button } from '@mui/material';
+import './UserNameWidget.css';
 
 interface UserNameWidgetProps {
     userName: string,
@@ -16,21 +11,27 @@ interface UserNameWidgetProps {
 
 const UserNameWidget: React.FC<UserNameWidgetProps> = ({ userName }) => {
     const [name, setName] = useState(userName);
+    const dispatch = useDispatch();
 
-    return name ? 
+    const handleNameSubmit = () => {
+        dispatch(setUserName(name));
+    };
+
+    return userName ? 
     (
-        <Typography>{name}</Typography>
+        <Box className='game-footer' sx={{ width: "100%" }}>{userName}</Box>
     )
     :
     (
-        <TextField
-        // id="outlined-suffix-shrink"
-        label="Enter Username"
-        variant="outlined"
-        disabled={false}
-        onChange={(e) => setName(e.target.value)}
-        inputProps={{ readOnly: false }}
-        />
+        <Box className="container">
+            <TextField
+            label="Enter Username"
+            variant="outlined"
+            onChange={(e) => setName(e.target.value)}
+            inputProps={{ readOnly: false }}
+            />
+            <Button disabled={!name.trim()} onClick={handleNameSubmit}>Confirm</Button>
+        </Box>
     );
 }
 
