@@ -22,13 +22,13 @@ const WidgetLayout: React.FC = () => {
     // Handle the decrement of ecoScore every 2 seconds
     useEffect(() => {
         const interval = setInterval(() => {
-            if (ecoScore > 0) {
+            if (ecoScore > 0 && userName.trim()) {
                 dispatch(decrementEcoScore());
             }
         }, 2000); // Decrement every 2 seconds
 
         return () => clearInterval(interval); // Clear interval when component unmounts
-    }, [ecoScore, dispatch]); // Re-run effect when ecoScore changes
+    }, [ecoScore, dispatch, userName]); // Re-run effect when ecoScore changes
 
     const renderPlaceholderBox = (text: string) => (
         <Paper
