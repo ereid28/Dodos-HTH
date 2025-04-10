@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './EcoScoreWidget.css';
 
 interface EcoScoreWidgetProps {
     ecoScore: number;
+    triggerJitter: () => void;  // Add triggerJitter prop
 }
 
-const EcoScoreWidget: React.FC<EcoScoreWidgetProps> = ({ ecoScore }) => {
+const EcoScoreWidget: React.FC<EcoScoreWidgetProps> = ({ ecoScore, triggerJitter }) => {
     const getEcoScoreColor = (score: number) => {
         if (score < 20) return '#ff0000'; // Red
         if (score < 40) return '#ff4500'; // Orange-Red
@@ -27,6 +28,14 @@ const EcoScoreWidget: React.FC<EcoScoreWidgetProps> = ({ ecoScore }) => {
     };
 
     const dotColors = getDotColors(ecoScore);
+
+    // You can trigger jitter when certain conditions are met, e.g., low ecoScore
+    // Use a useEffect to trigger jitter when ecoScore is low
+    useEffect(() => {
+        if (ecoScore < 20) {
+            triggerJitter(); // Trigger jitter when ecoScore is below 20
+        }
+    }, [ecoScore, triggerJitter]); // Depend on ecoScore, so it triggers when it changes
 
     return (
         <div className="eco-score-wrapper">

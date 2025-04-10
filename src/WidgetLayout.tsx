@@ -1,5 +1,5 @@
 // WidgetLayout.tsx (with MUI integration for widgets)
-import React, {useEffect } from 'react';
+import React, {useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from './redux/store';
 import { decrementEcoScore } from './redux/slice';
@@ -19,6 +19,9 @@ const WidgetLayout: React.FC = () => {
     const userName = useSelector((state: RootState) => state.layout.userName);
     const dispatch = useDispatch();
 
+    // State to manage jitter effect
+    const [jitter, setJitter] = useState(false);
+
     // Handle the decrement of ecoScore every 2 seconds
     useEffect(() => {
         const interval = setInterval(() => {
@@ -29,6 +32,12 @@ const WidgetLayout: React.FC = () => {
 
         return () => clearInterval(interval); // Clear interval when component unmounts
     }, [ecoScore, dispatch, userName]); // Re-run effect when ecoScore changes
+
+    // Function to trigger jitter effect
+    const triggerJitter = () => {
+        setJitter(true);
+        setTimeout(() => setJitter(false), 500); // Reset jitter effect after 0.5 seconds
+    };
 
     const renderPlaceholderBox = (text: string) => (
         <Paper
@@ -50,10 +59,10 @@ const WidgetLayout: React.FC = () => {
     );
 
     return (
-        <Box className="layout-container">
+        <Box className={`layout-container ${jitter ? 'jitter-effect' : ''}`}>
             <Box className="widget-column">
-                {<EcoScoreWidget ecoScore={ecoScore}/>}
-                {<QuestionWidget/>}
+                {<EcoScoreWidget ecoScore={ecoScore} triggerJitter={triggerJitter} />}
+                {<QuestionWidget triggerJitter={triggerJitter} />}
                 {renderPlaceholderBox("Left Widget 3")}
             </Box>
 
@@ -83,7 +92,7 @@ const WidgetLayout: React.FC = () => {
             </Box>
 
             <Box className="widget-column">
-                {<LeaderboardWidget/>}
+                {<LeaderboardWidget triggerJitter={triggerJitter} />}
                 {renderPlaceholderBox("Right Widget 3")}
             </Box>
         </Box>
