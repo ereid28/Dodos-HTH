@@ -1,0 +1,40 @@
+.container {
+    display: flex;
+    align-items: center;
+    height: 75px;
+    width: 100%;
+    max-width: 700px;
+    background-color: #d1e7dd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.container .MuiTextField-root {
+    flex: 1;
+}
+
+.container .MuiButton-root {
+    background-color: green;
+    color: white;
+    white-space: nowrap;
+    height: 75% !important;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.container .MuiButton-root:hover {
+    background-color: darkgreen;
+}
+
+.container .MuiTextField-root .MuiOutlinedInput-root {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}

@@ -1,15 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface EcoScoreState {
+interface State {
     ecoScore: number;
+    userName: string;
 }
 
-const initialState: EcoScoreState = {
+const initialState: State = {
     ecoScore: 100,
+    userName: "",
 };
 
-const ecoScoreSlice = createSlice({
-    name: 'ecoScore',
+const slice = createSlice({
+    name: 'layout',
     initialState,
     reducers: {
         setEcoScore(state, action: PayloadAction<number>) {
@@ -22,9 +24,12 @@ const ecoScoreSlice = createSlice({
             if (state.ecoScore > 0) {
                 state.ecoScore -= 1;
             }
+        },
+        setUserName(state, action: PayloadAction<string>) {
+            state.userName = action.payload.trim();
         }
     },
 });
 
-export const { setEcoScore, incrementEcoScore, decrementEcoScore } = ecoScoreSlice.actions;
-export default ecoScoreSlice.reducer;
+export const { setEcoScore, incrementEcoScore, decrementEcoScore, setUserName } = slice.actions;
+export default slice.reducer;

@@ -2,8 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import './WidgetLayout.css';
 import questions from './questions';
 import { Box, Paper, Typography, List, ListItem } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { incrementEcoScore, decrementEcoScore } from './redux/ecoScoreSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from './redux/store';
+import { incrementEcoScore, decrementEcoScore } from './redux/slice';
 
 interface QuestionWidgetProps {
     triggerJitter: () => void; // Accept triggerJitter as a prop
@@ -17,6 +18,7 @@ const QuestionWidget: React.FC<QuestionWidgetProps> = ({ triggerJitter }) => {
     const [countdown, setCountdown] = useState<number>(20); // Timer for question display (20 seconds)
     const [nextQuestionCountdown, setNextQuestionCountdown] = useState<number>(10); // Countdown for next question
     const [showNextQuestionScreen, setShowNextQuestionScreen] = useState<boolean>(false); // Show next question countdown screen
+    const userName = useSelector((state: RootState) => state.layout.userName);
     const dispatch = useDispatch();
 
     // Handle moving to the next question after a feedback message is shown
@@ -90,40 +92,47 @@ const QuestionWidget: React.FC<QuestionWidgetProps> = ({ triggerJitter }) => {
     
     // Timer logic for countdown
     useEffect(() => {
-        if (showNextQuestionScreen) {
-            // Countdown for the "Next Question in X seconds..."
-            const timer = setInterval(() => {
-                setNextQuestionCountdown(prev => {
-                    if (prev > 1) return prev - 1;
-                    else {
-                        clearInterval(timer);
-                        moveToNextQuestion(); // Move to the next question after countdown ends
-                        return 0;
-                    }
-                });
-            }, 1000);
-            return () => clearInterval(timer);
-        } else {
-            // Question countdown logic
-            const timer = setInterval(() => {
-                setCountdown(prev => {
-                    if (prev > 1) return prev - 1;
-                    else {
-                        if (!feedback) {
-                            handleTimeout(); // Show 'Wrong!' if time runs out
+            if (!userName.trim()) {
+
+            } else if (showNextQuestionScreen) {
+                // Countdown for the "Next Question in X seconds..."
+                const timer = setInterval(() => {
+                    setNextQuestionCountdown(prev => {
+                        if (prev > 1) return prev - 1;
+                        else {
+                            clearInterval(timer);
+                            moveToNextQuestion(); // Move to the next question after countdown ends
+                            return 0;
                         }
-                        return 0;
-                    }
-                });
-            }, 1000);
-            return () => clearInterval(timer);
-        }
-    }, [countdown, feedback, showNextQuestionScreen, handleTimeout]);
+                    });
+                }, 1000);
+                return () => clearInterval(timer);
+            } else {
+                // Question countdown logic
+                const timer = setInterval(() => {
+                    setCountdown(prev => {
+                        if (prev > 1) return prev - 1;
+                        else {
+                            if (!feedback) {
+                                handleTimeout(); // Show 'Wrong!' if time runs out
+                            }
+                            return 0;
+                        }
+                    });
+                }, 1000);
+                return () => clearInterval(timer);
+            }
+    }, [countdown, feedback, showNextQuestionScreen, handleTimeout, userName]);
 
     // Listen for key presses (1, 2, or 3) to select an answer
     useEffect(() => {
         const handleKeyPress = (event: KeyboardEvent) => {
             if (selectedAnswer !== null) return; // Prevent changing the answer after it's selected
+
+             // Check if the event target is an input field or textarea
+        if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+            return; // Stop execution if typing inside an input field
+        }
 
             if (event.key === '1' && currentQuestion.options[0]) {
                 handleAnswerClick(currentQuestion.options[0]);
@@ -150,7 +159,22 @@ const QuestionWidget: React.FC<QuestionWidgetProps> = ({ triggerJitter }) => {
                 backgroundColor: 'rgba(240, 240, 240, 0.9)', // Light gray tint
             }}
         >
-            {showNextQuestionScreen ? ( // Show next question countdown screen
+            {!userName.trim() ? (
+                <Box
+                sx={{
+                    height: '200px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                <Typography
+                    sx={{ fontSize: '24px', fontWeight: 'bold', textAlign: 'center' }}
+                >
+                    Enter a username to start questions
+                </Typography>
+            </Box>
+            ) : showNextQuestionScreen ? ( // Show next question countdown screen
                 <Box
                     sx={{
                         height: '200px',

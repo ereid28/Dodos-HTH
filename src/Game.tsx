@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import { Unity, useUnityContext } from "react-unity-webgl";
 import "./Game.css";
 import { useDispatch } from 'react-redux';
-import { incrementEcoScore } from './redux/ecoScoreSlice';
+import { incrementEcoScore } from './redux/slice';
 
 const Game = () => {
     const dispatch = useDispatch();

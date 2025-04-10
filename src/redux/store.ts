@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import ecoScoreReducer from './ecoScoreSlice';
+import layoutReducer from './slice';
 
 const store = configureStore({
     reducer: {
-        ecoScore: ecoScoreReducer,
+        layout: layoutReducer
     },
 });
 
