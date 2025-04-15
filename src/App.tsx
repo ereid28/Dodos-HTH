@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css'; // Ensure you import the CSS for animations
 import WidgetLayout from './WidgetLayout';
-import backgroundImage from './placeholder_background.jpg'; // import the image
+import healthyBackground from './good_background.jpg'; // import the image
 import depricatedBackground from './bad-background.png';
 import { RootState } from './redux/store';
 import { useSelector, useDispatch } from 'react-redux';
@@ -13,7 +13,7 @@ function App() {
     <div
       className="app"
       style={{
-        backgroundImage: ecoScore > 20 ? `url(${backgroundImage})` : `url(${depricatedBackground})`,
+        backgroundImage: ecoScore > 20 ? `url(${healthyBackground})` : `url(${depricatedBackground})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
