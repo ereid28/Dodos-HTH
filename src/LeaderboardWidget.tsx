@@ -12,7 +12,28 @@ const LeaderboardWidget: React.FC<LeaderboardWidgetProps> = ({ triggerJitter }) 
             <Typography variant="body2" color="#1e3a8a" textAlign="center" mb={2}>
                 Your name, EcoScore, and real score will appear here!
             </Typography>
-            <Box sx={{ backgroundColor: '#ffffffcc', borderRadius: 2, p: 2, fontFamily: 'monospace' }}>
+            <Box sx={{ backgroundColor: '#ffffffcc', borderRadius: 2, p: 2, fontFamily: 'monospace', overflowY: 'auto', maxHeight: '320px' }}>
+                <Typography>1. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>2. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>3. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>1. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>2. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>3. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>1. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>2. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>3. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>1. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>2. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>3. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>1. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>2. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>3. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>1. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>2. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>3. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>1. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>2. PlayerName - EcoScore: ??? - Score: ???</Typography>
+                <Typography>3. PlayerName - EcoScore: ??? - Score: ???</Typography>
                 <Typography>1. PlayerName - EcoScore: ??? - Score: ???</Typography>
                 <Typography>2. PlayerName - EcoScore: ??? - Score: ???</Typography>
                 <Typography>3. PlayerName - EcoScore: ??? - Score: ???</Typography>
