@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import '../WidgetLayout.css';
-import questions from '../questions';
+import questions from '../utils/questions';
 import { Box, Paper, Typography, List, ListItem } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
