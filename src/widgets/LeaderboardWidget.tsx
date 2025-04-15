@@ -1,4 +1,4 @@
-import './WidgetLayout.css';
+import '../WidgetLayout.css';
 import { Box, Paper, Typography } from '@mui/material';
 
 interface LeaderboardWidgetProps {

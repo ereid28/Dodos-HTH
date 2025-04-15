@@ -5,11 +5,11 @@ import { RootState } from './redux/store';
 import { decrementEcoScore } from './redux/slice';
 import Game from './Game';
 import './WidgetLayout.css';
-import QuestionWidget from './QuestionWidget';
-import LeaderboardWidget from './LeaderboardWidget';
-import EcoScoreWidget from './EcoScoreWidget';
+import QuestionWidget from './widgets/QuestionWidget';
+import LeaderboardWidget from './widgets/LeaderboardWidget';
+import EcoScoreWidget from './widgets/EcoScoreWidget';
 import { Box, Paper, Typography } from '@mui/material';
-import UserNameWidget from './UserNameWidget';
+import UserNameWidget from './widgets/UserNameWidget';
 import { motion } from 'framer-motion';
 const MotionBox = motion(Box);
 
