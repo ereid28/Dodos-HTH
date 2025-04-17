@@ -11,7 +11,7 @@ function App() {
     <div
       className="app"
       style={{
-        backgroundImage: ecoScore > 20 ? `url(${process.env.PUBLIC_URL}/good_background.jpg)` : `url(${process.env.PUBLIC_URL}/bad_background.jpg)`,
+        backgroundImage: ecoScore > 20 ? `url(${process.env.PUBLIC_URL}/good_background.jpg)` : `url(${process.env.PUBLIC_URL}/bad_background.png)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
