@@ -8,8 +8,9 @@ import './WidgetLayout.css';
 import QuestionWidget from './widgets/QuestionWidget';
 import LeaderboardWidget from './widgets/LeaderboardWidget';
 import EcoScoreWidget from './widgets/EcoScoreWidget';
-import { Box, Paper, Typography } from '@mui/material';
 import UserNameWidget from './widgets/UserNameWidget';
+import StoryWidget from './widgets/StoryWidget';
+import { Box, Paper, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 const MotionBox = motion(Box);
 
@@ -63,7 +64,7 @@ const WidgetLayout: React.FC = () => {
             <Box className="widget-column">
                 {<EcoScoreWidget ecoScore={ecoScore} triggerJitter={triggerJitter} />}
                 {<QuestionWidget triggerJitter={triggerJitter} />}
-                {renderPlaceholderBox("Left Widget 3")}
+                {<StoryWidget triggerJitter={triggerJitter} />}
             </Box>
 
             <Box className="game-section">
