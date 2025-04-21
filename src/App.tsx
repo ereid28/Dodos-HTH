@@ -1,14 +1,17 @@
 import React from 'react';
 import './App.css'; // Ensure you import the CSS for animations
 import WidgetLayout from './WidgetLayout';
-import backgroundImage from './placeholder_background.jpg'; // import the image
+import { RootState } from './redux/store';
+import { useSelector } from 'react-redux';
 
 function App() {
+    const ecoScore = useSelector((state: RootState) => state.layout.ecoScore);
+  
   return (
     <div
       className="app"
       style={{
-        backgroundImage: `url(${backgroundImage})`,
+        backgroundImage: ecoScore > 20 ? `url(${process.env.PUBLIC_URL}/good_background.jpg)` : `url(${process.env.PUBLIC_URL}/bad_background.png)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

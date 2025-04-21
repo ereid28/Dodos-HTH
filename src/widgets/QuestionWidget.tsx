@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import './WidgetLayout.css';
-import questions from './questions';
+import '../WidgetLayout.css';
+import questions from '../utils/questions';
 import { Box, Paper, Typography, List, ListItem } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from './redux/store';
-import { incrementEcoScore, decrementEcoScore } from './redux/slice';
+import { RootState } from '../redux/store';
+import { incrementEcoScore, decrementEcoScore } from '../redux/slice';
 
 interface QuestionWidgetProps {
     triggerJitter: () => void; // Accept triggerJitter as a prop

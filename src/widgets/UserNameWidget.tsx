@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setUserName } from './redux/slice';
-import './WidgetLayout.css';
+import { setUserName } from '../redux/slice';
+import '../WidgetLayout.css';
 import { Box, TextField, Button } from '@mui/material';
 import './UserNameWidget.css';
 
