@@ -4,6 +4,8 @@ import { Box, Paper, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import story from '../utils/story';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 interface StoryWidgetProps {
     triggerJitter: () => void; // Accept triggerJitter as a prop
@@ -90,7 +92,7 @@ const StoryWidget: React.FC<StoryWidgetProps> = ( {triggerJitter} ) => {
                     }}
                 >
                     <Typography
-                        sx={{ fontSize: '16px', fontWeight: 'bold', textAlign: 'center' }}
+                        sx={{ fontSize: '18px', fontWeight: 'bold', textAlign: 'center' }}
                     >
                         {currentScript}
                     </Typography>
@@ -102,12 +104,36 @@ const StoryWidget: React.FC<StoryWidgetProps> = ( {triggerJitter} ) => {
                             mt: 2,
                         }}
                     >
-                        <Typography sx={{ fontSize: '16px', color: 'gray' }}>
-                            ← 4
-                        </Typography>
-                        <Typography sx={{ fontSize: '16px', color: 'gray' }}>
-                            5 →
-                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <ArrowBackIcon sx={{ color: 'gray' }} />
+                            <Box
+                                sx={{
+                                    border: '1px solid gray',
+                                    borderRadius: '4px',
+                                    px: 1,
+                                    py: 0.5,
+                                    fontSize: '14px',
+                                    color: 'gray',
+                                }}
+                            >
+                                4
+                            </Box>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Box
+                                sx={{
+                                    border: '1px solid gray',
+                                    borderRadius: '4px',
+                                    px: 1,
+                                    py: 0.5,
+                                    fontSize: '14px',
+                                    color: 'gray',
+                                }}
+                            >
+                                5
+                            </Box>
+                            <ArrowForwardIcon sx={{ color: 'gray' }} />
+                        </Box>
                     </Box>
                 </Box>
             )}
