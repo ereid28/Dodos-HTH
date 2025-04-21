@@ -2,8 +2,9 @@ import React, { useCallback, useEffect } from 'react';
 import { Unity, useUnityContext } from "react-unity-webgl";
 import "./Game.css";
 import { useDispatch, useSelector } from 'react-redux';
-import { incrementEcoScore } from './redux/slice';
+import { setEcoScore } from './redux/slice';
 import { RootState } from './redux/store';
+import { ReactUnityEventParameter } from 'react-unity-webgl/distribution/types/react-unity-event-parameters';
 
 const Game = () => {
     const ecoScore = useSelector((state: RootState) => state.layout.ecoScore);
@@ -15,8 +16,17 @@ const Game = () => {
         codeUrl: "build/build.wasm",
     });
 
-    const handleUpScore = useCallback(() => {
-        dispatch(incrementEcoScore());
+    const handleSetScore = useCallback((score: ReactUnityEventParameter[]) => {
+        const firstParam = score[0]; // or find the correct index/key you're expecting
+        const value = firstParam;
+
+        const numericScore = typeof value === 'number' ? value : Number(value);
+
+        if (!isNaN(numericScore)) {
+            dispatch(setEcoScore(numericScore));
+        } else {
+            console.warn('Received non-numeric value:', value);
+        }
     }, [dispatch]);  // Add dispatch as a dependency
 
     const handleScoreChange = useCallback(async () => {
@@ -30,7 +40,7 @@ const Game = () => {
             });
     
         await waitUntilLoaded();
-        sendMessage("GameManager", "ChangeScore", ecoScore);
+        sendMessage("GameManager", "SendScore", ecoScore);
     }, [ecoScore, sendMessage, isLoaded]);
 
     useEffect(() => {
@@ -38,11 +48,11 @@ const Game = () => {
     }, [handleScoreChange]);
 
     useEffect(() => {
-        addEventListener("SendScore", handleUpScore);
+        addEventListener("SendScore", handleSetScore);
         return () => {
-            removeEventListener("SendScore", handleUpScore);
+            removeEventListener("SendScore", handleSetScore);
         };
-    }, [addEventListener, removeEventListener, handleUpScore]);
+    }, [addEventListener, removeEventListener, handleSetScore]);
 
     return <Unity unityProvider={unityProvider} className="game"/>;
 }
