@@ -16,8 +16,8 @@ const Game = () => {
         codeUrl: "build/build.wasm",
     });
 
-    const handleSetScore = useCallback((score: ReactUnityEventParameter[]) => {
-        const firstParam = score[0]; // or find the correct index/key you're expecting
+    const handleSetScore = useCallback((...parameters: ReactUnityEventParameter[]) => {
+        const firstParam = parameters[0]; // or find the correct index/key you're expecting
         const value = firstParam;
 
         const numericScore = typeof value === 'number' ? value : Number(value);
@@ -41,7 +41,6 @@ const Game = () => {
         
         await waitUntilLoaded();
         sendMessage("GameManager", "UnitySetScore", ecoScore);
-        sendMessage("GameManager", "SendScore", ecoScore);
     }, [ecoScore, sendMessage, isLoaded]);
 
     useEffect(() => {
@@ -49,9 +48,9 @@ const Game = () => {
     }, [handleScoreChange]);
 
     useEffect(() => {
-        addEventListener("SendScoreToReact", handleUpScore);
+        addEventListener("SendScoreToReact", handleSetScore);
         return () => {
-            removeEventListener("SendScoreToReact", handleUpScore);
+            removeEventListener("SendScoreToReact", handleSetScore);
         };
     }, [addEventListener, removeEventListener, handleSetScore]);
 
