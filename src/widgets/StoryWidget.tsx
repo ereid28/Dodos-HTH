@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import '../WidgetLayout.css';
-import { Box, Paper, Typography, List, ListItem } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import { Box, Paper, Typography } from '@mui/material';
+import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import story from '../utils/story';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 interface StoryWidgetProps {
     triggerJitter: () => void; // Accept triggerJitter as a prop
@@ -16,23 +18,22 @@ const StoryWidget: React.FC<StoryWidgetProps> = ( {triggerJitter} ) => {
 
     // redux state
     const userName = useSelector((state: RootState) => state.layout.userName);
-    const dispatch = useDispatch();
 
-    const handleNextScript = () => {
+    const handleNextScript = useCallback(() => {
         // mover forward through story
         if (index < 11) {
             setCurrentScript(story[index + 1].script);
             setIndex(index + 1);
         }
-    };
+    }, [index]);
 
-    const handlePrevScript = () => { 
+    const handlePrevScript = useCallback(() => { 
         // move backwards through story
         if (index > 0) {
             setCurrentScript(story[index - 1].script);
             setIndex(index - 1);
         }
-    };
+    }, [index]);
 
     // Navigate story
     useEffect(() => {
@@ -85,15 +86,57 @@ const StoryWidget: React.FC<StoryWidgetProps> = ( {triggerJitter} ) => {
                     sx={{
                         height: '200px',
                         display: 'flex',
+                        flexDirection: 'column',
                         alignItems: 'center',
-                        justifyContent: 'center',
+                        justifyContent: 'space-between',
                     }}
                 >
                     <Typography
-                        sx={{ fontSize: '24px', fontWeight: 'bold', textAlign: 'center' }}
+                        sx={{ fontSize: '18px', fontWeight: 'bold', textAlign: 'center' }}
                     >
                         {currentScript}
                     </Typography>
+                    <Box
+                        sx={{
+                            width: '100%',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            mt: 2,
+                        }}
+                    >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <ArrowBackIcon sx={{ color: 'gray' }} />
+                            <Box
+                                sx={{
+                                    border: '1px solid gray',
+                                    borderRadius: '4px',
+                                    px: 1,
+                                    py: 0.5,
+                                    fontSize: '12px',
+                                    color: 'white',
+                                    backgroundColor: 'gray',
+                                }}
+                            >
+                                4
+                            </Box>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Box
+                                sx={{
+                                    border: '1px solid gray',
+                                    borderRadius: '4px',
+                                    px: 1,
+                                    py: 0.5,
+                                    fontSize: '12px',
+                                    color: 'white',
+                                    backgroundColor: 'gray',
+                                }}
+                            >
+                                5
+                            </Box>
+                            <ArrowForwardIcon sx={{ color: 'gray' }} />
+                        </Box>
+                    </Box>
                 </Box>
             )}
         </Paper>
