@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import '../WidgetLayout.css';
-import { Box, Paper, Typography, List, ListItem } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import { Box, Paper, Typography } from '@mui/material';
+import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import story from '../utils/story';
 
@@ -16,23 +16,22 @@ const StoryWidget: React.FC<StoryWidgetProps> = ( {triggerJitter} ) => {
 
     // redux state
     const userName = useSelector((state: RootState) => state.layout.userName);
-    const dispatch = useDispatch();
 
-    const handleNextScript = () => {
+    const handleNextScript = useCallback(() => {
         // mover forward through story
         if (index < 11) {
             setCurrentScript(story[index + 1].script);
             setIndex(index + 1);
         }
-    };
+    }, [index]);
 
-    const handlePrevScript = () => { 
+    const handlePrevScript = useCallback(() => { 
         // move backwards through story
         if (index > 0) {
             setCurrentScript(story[index - 1].script);
             setIndex(index - 1);
         }
-    };
+    }, [index]);
 
     // Navigate story
     useEffect(() => {
