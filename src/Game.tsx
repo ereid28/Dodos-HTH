@@ -30,7 +30,7 @@ const Game = () => {
             });
     
         await waitUntilLoaded();
-        sendMessage("GameManager", "SendScore", ecoScore);
+        sendMessage("GameManager", "ChangeScore", ecoScore);
     }, [ecoScore, sendMessage, isLoaded]);
 
     useEffect(() => {
