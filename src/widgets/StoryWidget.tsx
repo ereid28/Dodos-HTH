@@ -112,8 +112,9 @@ const StoryWidget: React.FC<StoryWidgetProps> = ( {triggerJitter} ) => {
                                     borderRadius: '4px',
                                     px: 1,
                                     py: 0.5,
-                                    fontSize: '14px',
-                                    color: 'gray',
+                                    fontSize: '12px',
+                                    color: 'white',
+                                    backgroundColor: 'gray',
                                 }}
                             >
                                 4
@@ -126,8 +127,9 @@ const StoryWidget: React.FC<StoryWidgetProps> = ( {triggerJitter} ) => {
                                     borderRadius: '4px',
                                     px: 1,
                                     py: 0.5,
-                                    fontSize: '14px',
-                                    color: 'gray',
+                                    fontSize: '12px',
+                                    color: 'white',
+                                    backgroundColor: 'gray',
                                 }}
                             >
                                 5

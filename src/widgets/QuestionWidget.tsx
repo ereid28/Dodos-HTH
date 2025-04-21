@@ -209,6 +209,19 @@ const QuestionWidget: React.FC<QuestionWidgetProps> = ({ triggerJitter }) => {
                                             : 'black',
                                 }}
                             >
+                                <Box
+                                    sx={{
+                                        borderRadius: '4px',
+                                        px: 1,
+                                        py: 0.5,
+                                        fontSize: '12px',
+                                        color: 'white',
+                                        backgroundColor: 'gray',
+                                        marginRight: "3px",
+                                    }}
+                                >
+                                    {index + 1}
+                                </Box>
                                 {option}
                             </ListItem>
                         ))}
