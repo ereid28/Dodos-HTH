@@ -38,9 +38,9 @@ const Game = () => {
                 };
                 check();
             });
-    
+        
         await waitUntilLoaded();
-        sendMessage("GameManager", "SendScore", ecoScore);
+        sendMessage("GameManager", "UnitySetScore", ecoScore);
     }, [ecoScore, sendMessage, isLoaded]);
 
     useEffect(() => {
@@ -48,9 +48,9 @@ const Game = () => {
     }, [handleScoreChange]);
 
     useEffect(() => {
-        addEventListener("SendScore", handleSetScore);
+        addEventListener("SendScore", handleUpScore);
         return () => {
-            removeEventListener("SendScore", handleSetScore);
+            removeEventListener("SendScore", handleUpScore);
         };
     }, [addEventListener, removeEventListener, handleSetScore]);
 
