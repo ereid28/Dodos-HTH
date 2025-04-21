@@ -84,15 +84,31 @@ const StoryWidget: React.FC<StoryWidgetProps> = ( {triggerJitter} ) => {
                     sx={{
                         height: '200px',
                         display: 'flex',
+                        flexDirection: 'column',
                         alignItems: 'center',
-                        justifyContent: 'center',
+                        justifyContent: 'space-between',
                     }}
                 >
                     <Typography
-                        sx={{ fontSize: '24px', fontWeight: 'bold', textAlign: 'center' }}
+                        sx={{ fontSize: '16px', fontWeight: 'bold', textAlign: 'center' }}
                     >
                         {currentScript}
                     </Typography>
+                    <Box
+                        sx={{
+                            width: '100%',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            mt: 2,
+                        }}
+                    >
+                        <Typography sx={{ fontSize: '16px', color: 'gray' }}>
+                            ← 4
+                        </Typography>
+                        <Typography sx={{ fontSize: '16px', color: 'gray' }}>
+                            5 →
+                        </Typography>
+                    </Box>
                 </Box>
             )}
         </Paper>
