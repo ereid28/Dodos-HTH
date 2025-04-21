@@ -2,7 +2,7 @@
 import React, {useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from './redux/store';
-import { decrementEcoScore } from './redux/slice';
+import { decrementEcoScore, setEcoScore } from './redux/slice';
 import Game from './Game';
 import './WidgetLayout.css';
 import QuestionWidget from './widgets/QuestionWidget';
@@ -39,6 +39,24 @@ const WidgetLayout: React.FC = () => {
         setJitter(true);
         setTimeout(() => setJitter(false), 500); // Reset jitter effect after 0.5 seconds
     };
+
+    // shortcut for incrementing and decrementing ecoscore by 20
+    useEffect(() => {
+            const handleKeyPress = (event: KeyboardEvent) => {    
+                 // Check if the event target is an input field or textarea
+            if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+                return; // Stop execution if typing inside an input field
+            }
+                if (event.key === '>') {
+                    dispatch(setEcoScore(ecoScore + 20));
+                } else if (event.key === '<') {
+                    dispatch(setEcoScore(ecoScore - 20));
+                }
+            };
+    
+            window.addEventListener('keydown', handleKeyPress);
+            return () => window.removeEventListener('keydown', handleKeyPress);
+        }, [dispatch, ecoScore]);
 
     const renderPlaceholderBox = (text: string) => (
         <Paper
