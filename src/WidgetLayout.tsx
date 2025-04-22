@@ -11,7 +11,8 @@ import EcoScoreWidget from './widgets/EcoScoreWidget';
 import UserNameWidget from './widgets/UserNameWidget';
 import StoryWidget from './widgets/StoryWidget';
 import ResourceWidget from './widgets/ResourceWidget';
-import { Box, Paper, Typography } from '@mui/material';
+// import { Box, Paper, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { motion } from 'framer-motion';
 const MotionBox = motion(Box);
 

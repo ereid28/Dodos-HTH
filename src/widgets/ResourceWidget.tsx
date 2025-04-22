@@ -50,11 +50,21 @@ const ResourceWidget = () => {
                 alignItems="center" 
                 gap={4}
             >
-                <PetsIcon sx={{ fontSize: iconSize, color: iconColor }} />
-                <GrassIcon sx={{ fontSize: iconSize, color: iconColor }} />
-                <WaterDropIcon sx={{ fontSize: iconSize, color: iconColor }} />
-                <RecyclingIcon sx={{ fontSize: iconSize, color: iconColor }} />
-                <FeedIcon sx={{ fontSize: iconSize, color: iconColor }} />
+                <a href="https://www.worldwildlife.org/" target="_blank" rel="noopener noreferrer">
+                    <PetsIcon sx={{ fontSize: iconSize, color: iconColor, cursor: 'pointer' }} />
+                </a>
+                <a href="https://eartheasy.com/" target="_blank" rel="noopener noreferrer">
+                    <GrassIcon sx={{ fontSize: iconSize, color: iconColor }} />
+                </a>
+                <a href="https://www.epa.gov/watersense" target="_blank" rel="noopener noreferrer">
+                    <WaterDropIcon sx={{ fontSize: iconSize, color: iconColor }} />
+                </a>
+                <a href="https://www.recyclecoach.com/blog" target="_blank" rel="noopener noreferrer">
+                    <RecyclingIcon sx={{ fontSize: iconSize, color: iconColor }} />
+                </a>
+                <a href="https://grist.org/" target="_blank" rel="noopener noreferrer">
+                    <FeedIcon sx={{ fontSize: iconSize, color: iconColor }} />
+                </a>
             </Box>
         </Paper>
     );
