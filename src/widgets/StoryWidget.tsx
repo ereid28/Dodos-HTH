@@ -120,6 +120,14 @@ const StoryWidget: React.FC<StoryWidgetProps> = ( {triggerJitter} ) => {
                                 4
                             </Box>
                         </Box>
+                        <Typography
+                            sx={{
+                                fontsize: '12px',
+                                fontweight: 'bold',
+                            }}
+                        >
+                            {index + 1}/12
+                        </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <Box
                                 sx={{
