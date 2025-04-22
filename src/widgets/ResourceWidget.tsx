@@ -22,7 +22,6 @@ const ResourceWidget = () => {
         else setIconColor('#00ff00'); // Green
     }, [ecoScore]);
 
-
     return (
         <Paper 
             elevation={4} 

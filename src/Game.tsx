@@ -17,7 +17,7 @@ const Game = () => {
     });
 
     const handleSetScore = useCallback((...parameters: ReactUnityEventParameter[]) => {
-        const firstParam = parameters[0]; // or find the correct index/key you're expecting
+        const firstParam = parameters[0];
         const value = firstParam;
 
         const numericScore = typeof value === 'number' ? value : Number(value);
@@ -27,7 +27,7 @@ const Game = () => {
         } else {
             console.warn('Received non-numeric value:', value);
         }
-    }, [dispatch]);  // Add dispatch as a dependency
+    }, [dispatch]);
 
     const handleScoreChange = useCallback(async () => {
         const waitUntilLoaded = () =>
@@ -43,10 +43,12 @@ const Game = () => {
         sendMessage("GameManager", "UnitySetScore", ecoScore);
     }, [ecoScore, sendMessage, isLoaded]);
 
+    // every time ecoscore is updated in react, mirror it in unity
     useEffect(() => {
         handleScoreChange();
     }, [handleScoreChange]);
 
+    // set ecoScore to the score received from unity
     useEffect(() => {
         addEventListener("SendScoreToReact", handleSetScore);
         return () => {
