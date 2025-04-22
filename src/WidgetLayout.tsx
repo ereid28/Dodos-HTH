@@ -3,13 +3,14 @@ import React, {useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from './redux/store';
 import { decrementEcoScore, setEcoScore } from './redux/slice';
-import Game from './Game';
 import './WidgetLayout.css';
+import Game from './Game';
 import QuestionWidget from './widgets/QuestionWidget';
 import LeaderboardWidget from './widgets/LeaderboardWidget';
 import EcoScoreWidget from './widgets/EcoScoreWidget';
 import UserNameWidget from './widgets/UserNameWidget';
 import StoryWidget from './widgets/StoryWidget';
+import ResourceWidget from './widgets/ResourceWidget';
 import { Box, Paper, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 const MotionBox = motion(Box);
@@ -58,24 +59,24 @@ const WidgetLayout: React.FC = () => {
             return () => window.removeEventListener('keydown', handleKeyPress);
         }, [dispatch, ecoScore]);
 
-    const renderPlaceholderBox = (text: string) => (
-        <Paper
-            elevation={4}
-            sx={{
-                p: 2,
-                width: '500px',
-                minHeight: '200px',
-                borderRadius: '12px',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'rgba(240, 240, 240, 0.9)', // Light gray tint
-            }}
-        >
-            <Typography>{text}</Typography>
-        </Paper>
-    );
+    // const renderPlaceholderBox = (text: string) => (
+    //     <Paper
+    //         elevation={4}
+    //         sx={{
+    //             p: 2,
+    //             width: '500px',
+    //             minHeight: '200px',
+    //             borderRadius: '12px',
+    //             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+    //             display: 'flex',
+    //             alignItems: 'center',
+    //             justifyContent: 'center',
+    //             backgroundColor: 'rgba(240, 240, 240, 0.9)', // Light gray tint
+    //         }}
+    //     >
+    //         <Typography>{text}</Typography>
+    //     </Paper>
+    // );
 
     return (
         <Box className={`layout-container ${jitter ? 'jitter-effect' : ''}`}>
@@ -112,7 +113,7 @@ const WidgetLayout: React.FC = () => {
 
             <Box className="widget-column">
                 {<LeaderboardWidget triggerJitter={triggerJitter} />}
-                {renderPlaceholderBox("Right Widget 3")}
+                {<ResourceWidget />}
             </Box>
         </Box>
     );
