@@ -65,9 +65,32 @@ const LeaderboardWidget: React.FC = () => {
         justifyContent: 'flex-start',
       }}
     >
-      <Typography variant="h6" color="#1565c0" fontWeight="bold" textAlign="center" sx={{ mb: 1 }}>
-        🌍 Global Leaderboard
-      </Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          mb: 1,
+        }}
+      >
+        <Typography variant="h6" color="#1565c0" fontWeight="bold">
+          🌍 Global Leaderboard
+        </Typography>
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={fetchLeaderboard}
+          sx={{
+            fontSize: '0.75rem',
+            textTransform: 'none',
+            px: 1.5,
+            py: 0.5,
+            ml: 2,
+          }}
+        >
+          Refresh
+        </Button>
+      </Box>
 
       <Typography variant="body2" color="#1e3a8a" textAlign="center" sx={{ mb: 2 }}>
         Top Eco-Scores submitted by players
