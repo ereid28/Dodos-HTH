@@ -113,7 +113,7 @@ const WidgetLayout: React.FC = () => {
             </Box>
 
             <Box className="widget-column">
-                {<LeaderboardWidget triggerJitter={triggerJitter} />}
+                {<LeaderboardWidget />}
                 {<ResourceWidget />}
             </Box>
         </Box>
